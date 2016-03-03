@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Simple Leaflet Map</title>
+    <title>ESRI Leaflet Dynamic Map Layer With Map Tiles</title>
     <meta charset="utf-8" />
     <link 
         rel="stylesheet" 
@@ -9,10 +9,10 @@
     />
 </head>
 <body>
-    <div id="map" style="width: 600px; height: 400px"></div>
+    <div id="map-non-tiled" style="width: 600px; height: 400px"></div>
+    <div id="map-tiled" style="width: 600px; height: 400px"></div>
 
 <script src="//cdn.jsdelivr.net/leaflet/0.7.3/leaflet.js"></script>
-
 <script src="//cdn.jsdelivr.net/leaflet.esri/1.0.0-rc.7/esri-leaflet.js"></script>
   
 <script>
@@ -261,73 +261,38 @@ EsriLeaflet.tiledDynamicMapLayer = function(url, options) {
 }));
 //# sourceMappingURL=esri-leaflet-dynamic-tilelayer-src.js.map
 
-
-
 </script>
 
 
 
 
 <script>
-        /*
-        var map = L.map('map').setView([39.828328,-98.57941], 8);
-            L.tileLayer(
-            'http://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
-            
-            maxZoom: 18,
-            }).addTo(map);
-            
-            */
-
-           
+         
 var osmUrl = 'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
               
-// create a map
-var map = new L.Map('map');
+// create  map1
+var map1 = new L.Map('map-non-tiled');
 L.tileLayer(osmUrl, {
     attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
-}).addTo(map);
-
-var southWest = L.latLng(-141.36598820628942, 39.3967934601134),
-    northEast = L.latLng( -62.94207609601293,  65.22276210439021),
-    bounds = L.latLngBounds(southWest, northEast)
+}).addTo(map1);
+// set the map1's starting view
+map1.setView( new L.LatLng(39.828328,-98.57941), 4 );
 
 
-// set the map's starting view
-map.setView( new L.LatLng(39.828328,-98.57941), 4 );
+// create  map2
+var map2 = new L.Map('map-tiled');
+L.tileLayer(osmUrl, {
+    attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
+}).addTo(map2);
 
-/*
-var url1= "http://psgeodata.fs.fed.us/arcgis/rest/services/NPSG/forecast_data/MapServer/export?dpi=96&transparent=true&format=png32&bbox=-13437366.289477112,322176.86690329015,-8154038.894407133,8002569.468995759&bboxSR=102100&imageSR=102100&size=540,785&layerDefs={\"0\":\"(forecastdate BETWEEN timestamp '2015-11-09 07:00:00' AND timestamp '2015-11-10 06:59:59') AND (startdate BETWEEN timestamp '2015-11-09 07:00:00' AND timestamp '2015-11-10 06:59:59')\"}&f=image";
-
- 
-L.tileLayer.wms(url1, {   
+// set the map2's starting view
+map2.setView( new L.LatLng(39.828328,-98.57941), 4 ); 
   
-  maxBounds:bounds,
-  transparent: true,
-  attribution: "",
-  
-    tiled:true,
-}).addTo(map);
-*/            
-  
-  
-  //var map = new L.Map('map');
-  //map.setView( new L.LatLng(39.828328,-98.57941), 4 );
-
- var customLayerDefs = {"0":"(forecastdate BETWEEN timestamp '2015-11-12 07:00:00' AND timestamp '2015-11-13 06:59:59') AND (startdate BETWEEN timestamp '2015-11-11 07:00:00' AND timestamp '2015-11-12 06:59:59')"}; 
- var customLayerDefs2 = {"0":"(forecastdate BETWEEN timestamp '2015-11-02 07:00:00' AND timestamp '2015-11-03 06:59:59') AND (startdate BETWEEN timestamp '2015-11-01 07:00:00' AND timestamp '2015-11-02 06:59:59')"}; 
- 
- //var customLayerDefs = {"0":"(forecastdate BETWEEN timestamp '2015-11-09 00:00:01' AND timestamp '2015-11-09 23:59:59') AND (startdate BETWEEN timestamp '2015-11-11 00:00:01' AND timestamp '2015-11-11 23:59:59')"};
-  
-  
-  
-  var urlLayer = "http://psgeodata.fs.fed.us/arcgis/rest/services/NPSG/forecast_data/MapServer";
-  var layer1 =L.esri.tiledDynamicMapLayer(urlLayer,{
-      layerDefs:customLayerDefs,
+  var urlLayer = "http://maps1.arcgisonline.com/ArcGIS/rest/services/USA_Federal_Lands/MapServer";
+  var layer1 =L.esri.dynamicMapLayer(urlLayer,{
       layers:0,
       bboxSR:102100,
-      imageSR:102100,     
-      
+      imageSR:102100,         
       format:'png24',
       transparent:true,
       f:'image',
@@ -336,11 +301,9 @@ L.tileLayer.wms(url1, {
   });
   
   var layer2 = L.esri.tiledDynamicMapLayer(urlLayer,{
-      layerDefs:customLayerDefs2,
       layers:0,
       bboxSR:102100,
-      imageSR:102100,      
-      
+      imageSR:102100,    
       format:'png24',
       transparent:true,
       f:'image',
@@ -348,31 +311,8 @@ L.tileLayer.wms(url1, {
       zoom:8
   });
   
-  
-  
-  layer1.addTo(map);
-  layer2.addTo(map);
-  console.log(map.hasLayer(layer2));
- 
-  map.removeLayer(layer1);
-  //map.removeLayer(layer2);
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-            
-            
-  
+  layer1.addTo(map1);
+  layer2.addTo(map2);  
     </script>
 </body>
 </html>
